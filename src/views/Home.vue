@@ -4,18 +4,8 @@
       <input v-model="searchQuery" placeholder="Search for a Pokémon" />
       <button @click="searchPokemon(searchQuery)">Search</button>
     </div>
-    <ul v-if="!searchResults.length">
-      <li v-for="(pokemon, index) in pokemonList" :key="index">
-        {{ pokemon.name }}
-        <router-link
-          :to="{ name: 'PokemonDetails', params: { name: pokemon.name } }"
-        >
-          <button>See more</button>
-        </router-link>
-      </li>
-    </ul>
-    <ul v-else>
-      <li v-for="(pokemon, index) in searchResults" :key="index">
+    <ul v-if="searchResults.length || pokemonList.length">
+      <li v-for="(pokemon, index) in displayedPokemon" :key="index">
         {{ pokemon.name }}
         <router-link
           :to="{ name: 'PokemonDetails', params: { name: pokemon.name } }"
@@ -67,12 +57,14 @@ export default {
       "searchResults",
     ]),
 
-    // currentPokemonList() {
-    //   return this.searchQuery ? [] : usePokemonStore().pokemonList;
-    // },
+    displayedPokemon() {
+      return this.searchQuery
+        ? usePokemonStore().searchResults
+        : usePokemonStore().pokemonList;
+    },
 
     showPokemonList() {
-      return !this.searchQuery || usePokemonStore().searchResults.length === 0;
+      return usePokemonStore().searchResults.length === 0;
     },
   },
   mounted() {
