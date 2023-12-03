@@ -4,7 +4,7 @@
     <div v-if="pokemon">
       <h3>{{ pokemon.name }}</h3>
       <img
-        :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`"
+        :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`"
         alt="Pokemon Sprite"
       />
       <p><strong>Height:</strong> {{ pokemon.height }} decimetres</p>
@@ -23,7 +23,7 @@
 <script>
 export default {
   name: "PokemonDetails",
-  props: ["id"],
+  props: ["name"],
   data() {
     return {
       pokemon: null,
@@ -36,13 +36,18 @@ export default {
     async fetchPokemonDetails() {
       try {
         const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${this.id}`
+          `https://pokeapi.co/api/v2/pokemon/${this.name}`
         );
         const data = await response.json();
         this.pokemon = data;
       } catch (error) {
         console.error("Error fetching Pokémon details:", error);
       }
+    },
+  },
+  computed: {
+    pokemonId() {
+      return this.pokemon.id;
     },
   },
 };
